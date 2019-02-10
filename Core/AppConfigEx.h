@@ -1,0 +1,52 @@
+/**
+	* @version  
+	* @brief    Доп. заголовочник для настроек приложения
+	*/
+#ifndef APPCONFIGEX_H
+#define APPCONFIGEX_H
+
+// настройки для RABBIT_MQ
+#ifdef USE_RABBIT_MQ
+	
+	#define RABBIT_MQ_SETTINGS()	\
+		SETTINGS_BEGIN_GROUP(RABBIT_MQ)  \
+			SETTING_STR_VAL(RABBIT_MQ, HOST, "localhost")         \
+			SETTING_INT_VAL(RABBIT_MQ, PORT, 5672)								\
+			SETTING_STR_VAL(RABBIT_MQ, VIRTUAL_HOST, "/")         \
+			SETTING_STR_VAL(RABBIT_MQ, USER, "")         \
+			SETTING_STR_VAL(RABBIT_MQ, PASS, "")         \
+		SETTINGS_END_GROUP(RABBIT_MQ)    \
+
+#else // USE_RABBIT_MQ
+	#define RABBIT_MQ_SETTINGS()
+#endif //USE_RABBIT_MQ
+
+// ======================================================================
+
+#ifdef USE_MONITORING_RABBITMQ
+
+	#define MONITORING_RABBIT_MQ_SETTINGS()	\
+		SETTINGS_BEGIN_GROUP(MONITORING_RABBIT_MQ)	\
+			SETTING_STR_VAL(MONITORING_RABBIT_MQ, EXCHANGE, "EXCHANGE")										\
+			SETTING_STR_VAL(MONITORING_RABBIT_MQ, QUEUE, "QUEUE")										\
+		SETTINGS_END_GROUP(MONITORING_RABBIT_MQ)	
+
+#else // USE_MONITORING_RABBITMQ
+	#define MONITORING_RABBIT_MQ()
+#endif // USE_MONITORING_RABBITMQ
+
+// ======================================================================
+
+#ifdef USE_COMMANDS_RABBITMQ
+
+	#define COMMANDS_RABBIT_MQ()	\
+		SETTINGS_BEGIN_GROUP(COMMANDS_RABBIT_MQ)	\
+			SETTING_STR_VAL(COMMANDS_RABBIT_MQ, EXCHANGE, "EXCHANGE")										\
+			SETTING_STR_VAL(COMMANDS_RABBIT_MQ, QUEUE, "QUEUE")										\
+		SETTINGS_END_GROUP(COMMANDS_RABBIT_MQ)	
+	
+#else // USE_COMMANDS_RABBITMQ
+	#define COMMANDS_RABBIT_MQ()
+#endif // USE_COMMANDS_RABBITMQ
+
+#endif // APPCONFIGEX_H
