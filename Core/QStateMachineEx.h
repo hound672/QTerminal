@@ -32,11 +32,11 @@ public:
 // ======================================================================	
 	
 protected:
-	void SetTimer(quint32 timeout = U32_MAX_VALUE);
-	void SetState(int newState);
-	int GetState() const;
+	void setTimer(quint32 timeout = U32_MAX_VALUE);
+	void setState(int newState);
+	int getState() const;
 	// ======================================================================
-	virtual void OnEvTimer() {}
+	virtual void onEvTimer() {}
 	
 // ======================================================================
 	
@@ -49,7 +49,7 @@ private:
 // ======================================================================
 	
 private slots:
-	void SlotTimer();
+	void slotTimer();
 	
 };
 

@@ -20,13 +20,14 @@ public:
 // ======================================================================
 	
 private slots:
+	void testSingletone();
 	void testTemplateDefines();
 	void testEnvSet();
 	
 // ======================================================================
 	
-private:
-	QMainClass *mMainClass;
+//private:
+//	QMainClass *gMainClass;
 	
 };
 

@@ -21,7 +21,8 @@ QStateMachineEx::QStateMachineEx(const QString &className, const TStateName &sta
 	mWorkerName(className),
 	mStateNames(stateNames)
 {
-	connect(&mTimer, &QTimer::timeout, this, &QStateMachineEx::SlotTimer);
+	mTimer.setSingleShot(true);
+	connect(&mTimer, &QTimer::timeout, this, &QStateMachineEx::slotTimer);
 }
 
 // ======================================================================
@@ -35,7 +36,7 @@ QStateMachineEx::QStateMachineEx(const QString &className, const TStateName &sta
 	* @param  
 	* @retval 
 	*/
-void QStateMachineEx::SetTimer(quint32 timeout)
+void QStateMachineEx::setTimer(quint32 timeout)
 {
 	if (timeout == U32_MAX_VALUE) {
 		mTimer.stop();
@@ -52,7 +53,7 @@ void QStateMachineEx::SetTimer(quint32 timeout)
 	* @param  
 	* @retval 
 	*/
-void QStateMachineEx::SetState(int newState)
+void QStateMachineEx::setState(int newState)
 {
 	qInfo()	<< "[" << mWorkerName << "]"
 					<< "************* Set state from: " << mStateNames.value(mState, QString::number(mState))
@@ -68,7 +69,7 @@ void QStateMachineEx::SetState(int newState)
 	* @param  
 	* @retval 
 	*/
-int QStateMachineEx::GetState() const
+int QStateMachineEx::getState() const
 {
 	return mState;
 }
@@ -84,10 +85,9 @@ int QStateMachineEx::GetState() const
 	* @param  
 	* @retval 
 	*/
-void QStateMachineEx::SlotTimer()
+void QStateMachineEx::slotTimer()
 {
-	mTimer.stop();
-	OnEvTimer();
+	onEvTimer();
 }
 
 // ======================================================================

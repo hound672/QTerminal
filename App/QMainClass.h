@@ -5,15 +5,28 @@
 
 #include "Core/QSetupClass.h"
 
+#include "Collections/Interfaces.h"
 #include "Gui/Win/QWinMainWindowTerminal.h"
+#include "Core/Libs/QComPortThread.h"
+#include "Terminal/QTerminal.h"
 
 class QMainClass : public QSetupClass
 {
 	Q_OBJECT
 
-public:
+private:
 	explicit QMainClass(int argc, char *argv[]);
+	
+// ======================================================================
+	
+public:
 	~QMainClass();
+	static void setArgs(int argc, char **argv);
+	static QMainClass *getMainClass();
+	// ======================================================================
+	IGui *getGui() {return mGui;}
+	QTerminal *getTerminal() {return mTerminal;}
+	QComPortThread *getPort() {return mPort;}
 	
 // ======================================================================
 	
@@ -25,7 +38,9 @@ protected:
 // ======================================================================
 	
 protected:
-	QWinMainWindowTerminal *mMainWindow;	
+	IGui *mGui;	
+	QTerminal *mTerminal;
+	QComPortThread *mPort;
 	
 };
 

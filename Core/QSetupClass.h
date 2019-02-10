@@ -26,6 +26,11 @@
 	#define APP_CLASS QCoreApplication
 #endif
 
+// макрос возвращающий объект QMainClass
+#define MAIN_CLASS() QMainClass::getMainClass()
+// макрос возвращающий объект с настройками приложения
+#define APP_SETTINGS() QMainClass::getMainClass()->getSettings()
+
 // ======================================================================
 
 class QSetupClass : public QObject
@@ -37,6 +42,7 @@ public:
 	virtual ~QSetupClass();
 	int StartApp();
 	// ======================================================================
+	QSettingsApp *getSettings() {return &mSettings;}
 	QString getAppName() const;
 	QString getAppVersion() const;
 	QString getSettingsFileName() const;
@@ -91,6 +97,11 @@ protected:
 		
 public slots:
 	void slotWorkerError(int err);
+	
+// ======================================================================
+	
+private slots:
+	void slotQuitApp();
 };
 
 #endif // QSETUPCLASS_H

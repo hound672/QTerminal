@@ -8,7 +8,9 @@
 #include <QObject>
 #include <QThread>
 
+#ifdef USE_EPOOL_EVENT
 #include "Core/QEventDispatcherEpoll/qeventdispatcher_epoll.h"
+#endif // USE_EPOOL_EVENT
 
 #define WORKER_ERROR() emit signalError(-__LINE__);return;
 

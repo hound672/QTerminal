@@ -3,18 +3,42 @@
 #include "QMainClass.h"
 
 // ======================================================================
+static int sArgc;
+static char **sArgv;
+// ======================================================================
 
 QMainClass::QMainClass(int argc, char *argv[]) : 
 	QSetupClass(argc, argv)
 {
-	mMainWindow = new QWinMainWindowTerminal();
 }
 
 // ======================================================================
 
 QMainClass::~QMainClass()
 {
-	delete mMainWindow;	
+	delete mGui;	
+	delete mTerminal;
+	mPort->StopWorker();
+	delete mPort;
+}
+
+// ======================================================================
+
+/**
+	* @brief  Сохраняет переданые при запуске программы аргументы
+	* @param  
+	* @retval 
+	*/
+void QMainClass::setArgs(int argc, char **argv)
+{
+	sArgc = argc;
+	sArgv = argv;
+}
+
+QMainClass *QMainClass::getMainClass()
+{
+	static QMainClass mainClass(sArgc, sArgv);
+	return &mainClass;
 }
 
 // ======================================================================
@@ -30,7 +54,6 @@ QMainClass::~QMainClass()
 	*/
 void QMainClass::makeSignalSlots()
 {
-	qDebug() << "Make signal slots";
 }
 
 // ======================================================================
@@ -42,6 +65,13 @@ void QMainClass::makeSignalSlots()
 	*/
 int QMainClass::setup()
 {
+	mGui = new QWinMainWindowTerminal();
+	mTerminal = new QTerminal();
+	mPort = new QComPortThread();
+
+	mGui->init();
+	mTerminal->init();
+	
 	return 1;
 }
 
@@ -54,7 +84,8 @@ int QMainClass::setup()
 	*/
 int QMainClass::start()
 {
-	mMainWindow->show();
+	mPort->StartWorker();
+	mGui->show();
 	return 1;
 }
 

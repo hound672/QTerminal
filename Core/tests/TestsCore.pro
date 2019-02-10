@@ -1,4 +1,4 @@
-QT += core testlib
+QT += core testlib serialport
 QT -= gui
 
 include(../../QT_BLANK.pri)
@@ -10,7 +10,7 @@ TARGET = TestsCore
 CONFIG += console
 CONFIG -= app_bundle
 
-INCLUDEPATH += $$PWD/../../
+INCLUDEPATH += $$PWD/../../ 
 
 TEMPLATE = app
 
@@ -20,7 +20,11 @@ SOURCES += main.cpp \
     ../../App/QMainClass.cpp \
     ../QSettingsApp.cpp \
     ../QDebugEx/QDebugEx.cpp \
-    QTestMainClass.cpp
+    QTestMainClass.cpp \
+    Libs/QTestComPortThread.cpp \
+    ../QThreadWorker.cpp \
+    ../Libs/QComPortThread.cpp \
+    Utils/QTestStringUtils.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -40,5 +44,9 @@ HEADERS += \
     ../QSettingsApp.h \
     ../QDebugEx/QDebugEx.h \
     QTestMainClass.h \
-    ../Includes.h
+    ../Includes.h \
+    Libs/QTestComPortThread.h \
+    ../QThreadWorker.h \
+    ../Libs/QComPortThread.h \
+    Utils/QTestStringUtils.h
 

@@ -1,15 +1,10 @@
-#include "AppConfig.h"
 #include "QMainClass.h"
-
-// ======================================================================
-QMainClass *gMainClass;
-// ======================================================================
 
 int main(int argc, char *argv[])
 {
-	gMainClass = new QMainClass(argc, argv);
-	int res = gMainClass->StartApp();
-	delete gMainClass;
+	QMainClass::setArgs(argc, argv);
+	QMainClass *mainClass = QMainClass::getMainClass();
+	int res = mainClass->StartApp();
 	return res;
 }
 

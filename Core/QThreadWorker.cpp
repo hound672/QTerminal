@@ -1,4 +1,5 @@
 #include "App/QMainClass.h"
+#include "App/AppConfig.h"
 
 #include "QThreadWorker.h"
 
@@ -16,7 +17,7 @@ QThreadWorker::QThreadWorker() : QObject(NULL)
 
 	connect(mThread, &QThread::started, this, &QThreadWorker::slotStarted);
 	connect(mThread, &QThread::finished, this, &QThreadWorker::slotStopped);	
-	connect(this, &QThreadWorker::signalError, gMainClass, &QMainClass::slotWorkerError);	
+	connect(this, &QThreadWorker::signalError, QMainClass::getMainClass(), &QMainClass::slotWorkerError);	
 }
 
 QThreadWorker::~QThreadWorker()

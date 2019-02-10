@@ -29,6 +29,8 @@ QSetupClass::QSetupClass(int argc, char *argv[]):
 	CatchUnixSignals({SIGINT});
 #endif // Q_OS_WIN
 	
+	connect(mApp, &APP_CLASS::aboutToQuit, this, &QSetupClass::slotQuitApp);
+	
 	readSettings();
 	createLogFile(mSettings.COMMON.LOG_FILE_NAME);
 	
@@ -364,6 +366,23 @@ void QSetupClass::slotWorkerError(int err)
 							<< ". Code: " << err;
 	
 	mApp->exit(-1);
+}
+
+// ======================================================================
+
+// ======================================================================
+//  private slots                       
+// ======================================================================
+
+/**
+	* @brief  Слот обработки завершения работы приложения
+	* @param  
+	* @retval 
+	*/
+void QSetupClass::slotQuitApp()
+{
+	// сохраняем настройки
+	mSettings.SaveSettings();
 }
 
 // ======================================================================

@@ -1,10 +1,16 @@
+#include <QDebug>
 #include <QTest>
 
 #include "QTestMainClass.h"
 #include "Core/Includes.h"
+#include "App/AppConfig.h"
 
 // ======================================================================
-#include <QDebug>
+QMainClass *gMainClass;
+// ======================================================================
+
+// ======================================================================
+
 QTestMainClass::QTestMainClass(QObject *parent) : QObject(parent)
 {
 	static const char *argv[] = {
@@ -14,7 +20,8 @@ QTestMainClass::QTestMainClass(QObject *parent) : QObject(parent)
 		"-e",
 		"NEW_ENV=CHECK"
 	};
-	mMainClass = new QMainClass(_DIM(argv), (char**)argv);
+	QMainClass::setArgs(_DIM(argv), (char**)argv);
+	gMainClass = QMainClass::getMainClass();
 }
 
 // ======================================================================
@@ -24,15 +31,27 @@ QTestMainClass::QTestMainClass(QObject *parent) : QObject(parent)
 // ======================================================================
 
 /**
+	* @brief  Тест: объект возвращаемый статическим методом QMainClass::getMainClass является синглтоном
+	* @param  
+	* @retval 
+	*/
+void QTestMainClass::testSingletone()
+{
+	QCOMPARE(gMainClass, QMainClass::getMainClass());
+}
+
+// ======================================================================
+
+/**
 	* @brief  Тест: дефайны прилоежния прописанные в pro файле
 	* @param  
 	* @retval 
 	*/
 void QTestMainClass::testTemplateDefines()
 {
-	QCOMPARE(mMainClass->getAppName(), QString("QT_BLANK"));
-	QCOMPARE(mMainClass->getAppVersion(), QString("0.0.0.1"));
-	QCOMPARE(mMainClass->getSettingsFileName(), QString("settings.ini"));
+	QCOMPARE(gMainClass->getAppName(), QString("QT_BLANK"));
+	QCOMPARE(gMainClass->getAppVersion(), QString("0.0.0.1"));
+	QCOMPARE(gMainClass->getSettingsFileName(), QString("settings.ini"));
 }
 
 // ======================================================================

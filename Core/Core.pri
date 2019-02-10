@@ -16,3 +16,9 @@ Debug:DEFINES+=DEBUG_DEL_OLD
 TARGET = $${APP_NAME}
 
 TEMPLATE = app
+
+HEADERS += \
+    $$PWD/Utils/QStringUtils.h
+
+SOURCES += \
+    $$PWD/Utils/QStringUtils.cpp

@@ -1,5 +1,5 @@
 # Qt applications and config
-QT += core gui widgets
+QT += core gui widgets serialport
 CONFIG += c++11 debug_and_release
 CONFIG -= app_bundle
 TEMPLATE = app
@@ -18,7 +18,11 @@ SOURCES += \
     Core/QSettingsApp.cpp \
     Core/QSetupClass.cpp \
     App/QMainClass.cpp \ 
-    Gui/Win/QWinMainWindowTerminal.cpp
+    Gui/Win/QWinMainWindowTerminal.cpp \
+    Core/Libs/QComPortThread.cpp \
+    Core/QThreadWorker.cpp \
+    Terminal/QTerminal.cpp \
+    Core/QStateMachineEx.cpp
 
 HEADERS += \
     Core/QDebugEx/QDebugEx.h \ 
@@ -28,7 +32,12 @@ HEADERS += \
     Core/Includes.h \
     App/AppConfig.h \
     Collections/interfaces.h \ 
-    Gui/Win/QWinMainWindowTerminal.h
+    Gui/Win/QWinMainWindowTerminal.h \
+    Core/Libs/QComPortThread.h \
+    Core/QThreadWorker.h \
+    Terminal/QTerminal.h \
+    Core/QStateMachineEx.h \
+    Collections/collections.h
 
 DISTFILES += \
     Core/readme.MD

@@ -1,7 +1,7 @@
 # QT_BLANK
 Шаблон для Qt приложения.
 
-Version 1.4
+Version 1.7
 
 ## Список макросов:
 
@@ -25,10 +25,17 @@ USE_MONITORING_SERVICE
 ```
 Включает модуль для работы с мониторингом приложения (QMonitoringService)
 
-```USE_COMMANDS_SERVICE
+```
+USE_COMMANDS_SERVICE
 ```
 Включает модуль для работы с командами для приложения (QCommandsService)
 
+## Список классов
+```
+QComPortThread
+```
+Класс для работы с COM портом.
+Работает в отдельном потоке.
 
 ## Описание проекта
 
