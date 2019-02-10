@@ -7,6 +7,14 @@
 QMainClass::QMainClass(int argc, char *argv[]) : 
 	QSetupClass(argc, argv)
 {
+	mMainWindow = new QWinMainWindowTerminal();
+}
+
+// ======================================================================
+
+QMainClass::~QMainClass()
+{
+	delete mMainWindow;	
 }
 
 // ======================================================================
@@ -46,6 +54,7 @@ int QMainClass::setup()
 	*/
 int QMainClass::start()
 {
+	mMainWindow->show();
 	return 1;
 }
 

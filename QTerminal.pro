@@ -17,7 +17,8 @@ SOURCES += \
     Core/QDebugEx/QDebugEx.cpp \ 
     Core/QSettingsApp.cpp \
     Core/QSetupClass.cpp \
-    App/QMainClass.cpp \
+    App/QMainClass.cpp \ 
+    Gui/Win/QWinMainWindowTerminal.cpp
 
 HEADERS += \
     Core/QDebugEx/QDebugEx.h \ 
@@ -26,6 +27,11 @@ HEADERS += \
     App/QMainClass.h \
     Core/Includes.h \
     App/AppConfig.h \
+    Collections/interfaces.h \ 
+    Gui/Win/QWinMainWindowTerminal.h
 
 DISTFILES += \
     Core/readme.MD
+
+FORMS += \
+    Gui/Win/QWinMainWindowTerminal.ui

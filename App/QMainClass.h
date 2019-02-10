@@ -5,12 +5,15 @@
 
 #include "Core/QSetupClass.h"
 
+#include "Gui/Win/QWinMainWindowTerminal.h"
+
 class QMainClass : public QSetupClass
 {
 	Q_OBJECT
 
 public:
 	explicit QMainClass(int argc, char *argv[]);
+	~QMainClass();
 	
 // ======================================================================
 	
@@ -20,6 +23,9 @@ protected:
 	int start();
 	
 // ======================================================================
+	
+protected:
+	QWinMainWindowTerminal *mMainWindow;	
 	
 };
 
