@@ -160,6 +160,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="accessibleName">
+      <string>command</string>
+     </property>
      <property name="text">
       <string>Add command</string>
      </property>
@@ -175,12 +178,23 @@
      </property>
      <layout class="QVBoxLayout" name="listCmds"/>
     </widget>
+    <widget class="QPushButton" name="btnAddFile">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>20</y>
+       <width>111</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="accessibleName">
+      <string>file</string>
+     </property>
+     <property name="text">
+      <string>Add file</string>
+     </property>
+    </widget>
    </widget>
-   <zorder>groupBox</zorder>
-   <zorder>log</zorder>
-   <zorder>groupCommands</zorder>
-   <zorder>textData</zorder>
-   <zorder>groupCommands</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

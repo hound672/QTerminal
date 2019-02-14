@@ -31,6 +31,7 @@ public:
 	void init();
 	void portOpenClose();
 	void sendCommand(const SCommandDesc &cmd);
+	void sendFile(const SFileSendDesc &fileSend);
 	
 // ======================================================================
 	

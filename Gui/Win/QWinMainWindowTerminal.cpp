@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QFileDialog>
 #include <QRegularExpression>
 #include <QUuid>
 #include <QLineEdit>
@@ -22,6 +23,8 @@ static QHash<EResultCodes, QString> sResultCodeText = {
 static const QString sCmdText = "_text";
 static const QString sChRn = "_ch_rn";
 static const QString sChHex = "_ch_hex";
+static const QString sFileName = "_file";
+static const QString sFileChoice = "_file_choice";
 static const QString sBtnSend = "_btn_send";
 static const QString sBtnDel = "_btn_del";
 // ======================================================================
@@ -106,6 +109,7 @@ void QWinMainWindowTerminal::setStateWindow(EWindowState newState)
 	QString btnPortOpenCloseText;
 	bool btnRescanPortsEnabled;
 	bool btnAddCmdEnabled;
+	bool btnAddFileEnabled;
 	
 	switch (newState)
 	{
@@ -113,24 +117,28 @@ void QWinMainWindowTerminal::setStateWindow(EWindowState newState)
 		btnPortOpenCloseText = tr("Open");
 		btnRescanPortsEnabled = true;
 		btnAddCmdEnabled = false;
+		btnAddFileEnabled = false;
 		break;
 	// ======================================================================
 	case stsConnecting:
 		btnPortOpenCloseText = tr("Opening");
 		btnRescanPortsEnabled = false;
 		btnAddCmdEnabled = false;
+		btnAddFileEnabled = false;
 		break;
 	// ======================================================================
 	case stsConnected:
 		btnPortOpenCloseText = tr("Close");
 		btnRescanPortsEnabled = false;
 		btnAddCmdEnabled = true;
+		btnAddFileEnabled = true;
 		break;
 	}
 	
 	mUi->btnPortOpenClose->setText(btnPortOpenCloseText);
 	mUi->btnRescanPorts->setEnabled(btnRescanPortsEnabled);
 	mUi->btnAddCmd->setEnabled(btnAddCmdEnabled);
+	mUi->btnAddFile->setEnabled(btnAddFileEnabled);
 }
 
 // ======================================================================
@@ -196,10 +204,12 @@ void QWinMainWindowTerminal::makeSignalSlots()
 					this, &QWinMainWindowTerminal::slotBtnPortOpenClose);
 	connect(mUi->btnRescanPorts, &QPushButton::clicked,
 					this, &QWinMainWindowTerminal::slotBtnRescanPorts);
-	connect(mUi->btnAddCmd, &QPushButton::clicked,
-					this, &QWinMainWindowTerminal::slotBtnAddCmd);
 	connect(mUi->chAutoreconnect, &QCheckBox::clicked,
 					this, &QWinMainWindowTerminal::slotChAutoreconnect);
+	connect(mUi->btnAddCmd, &QPushButton::clicked,
+					this, &QWinMainWindowTerminal::slotBtnAddRow);
+	connect(mUi->btnAddFile, &QPushButton::clicked,
+					this, &QWinMainWindowTerminal::slotBtnAddRow);
 }
 
 // ======================================================================
@@ -217,6 +227,83 @@ void QWinMainWindowTerminal::rescanPorts()
 	foreach (QSerialPortInfo portInfo, portsList) {
 		mUi->portsList->addItem(portInfo.portName());
 	}
+}
+
+// ======================================================================
+
+/**
+	* @brief  Добавляет строку с данными команды для отправки
+	* @param  uniqueName: уникальное имя, с которым будут создаться виджеты
+	* @param  layout: слот на который будут добавляться виджеты
+	* @retval 
+	*/
+void QWinMainWindowTerminal::addCommandRow(const QString &uniqueName, QBoxLayout *layout)
+{
+	// создаем поле для ввода команды
+	QLineEdit *cmdText = new QLineEdit();
+	cmdText->setObjectName(uniqueName + sCmdText);
+	layout->addWidget(cmdText);
+	
+	// создаем чек-бокс для добавления перевода строки и возврата коретки
+	QCheckBox *chRn = new QCheckBox();
+	chRn->setObjectName(uniqueName + sChRn);
+	chRn->setChecked(false);
+	chRn->setText(tr("Add \\r\\n"));
+	layout->addWidget(chRn);
+
+	// создаем чек-бокс для HEX представления 
+	QCheckBox *chHex = new QCheckBox();
+	chHex->setObjectName(uniqueName + sChHex);
+	chHex->setChecked(false);
+	chHex->setText(tr("HEX"));
+	layout->addWidget(chHex);
+	
+	// создаем кнопку для отправки команды
+	QPushButton *btnSend = new QPushButton();
+	btnSend->setObjectName(uniqueName + sBtnSend);
+	btnSend->setAccessibleName(uniqueName);
+	btnSend->setText(tr("Send command"));
+	layout->addWidget(btnSend);
+	
+	connect(btnSend, &QPushButton::clicked, this, &QWinMainWindowTerminal::slotBtnSendCmd);
+}
+
+// ======================================================================
+
+/**
+	* @brief  Добавляет строку с отправкой содержимого файла в порт
+	* @param  uniqueName: уникальное имя, с которым будут создаться виджеты
+	* @param  layout: слот на который будут добавляться виджеты
+	* @retval 
+	*/
+void QWinMainWindowTerminal::addFileRow(const QString &uniqueName, QBoxLayout *layout)
+{
+	// создаем поле для файла
+	QLineEdit *fileCmd = new QLineEdit();
+	fileCmd->setObjectName(uniqueName + sFileName);
+	fileCmd->setReadOnly(true);
+	layout->addWidget(fileCmd);
+	
+	// создаем кнопку для выбора файла
+	QPushButton *btnFileChoice = new QPushButton();
+	btnFileChoice->setObjectName(uniqueName + sFileChoice);
+	btnFileChoice->setAccessibleName(uniqueName);
+	btnFileChoice->setText(tr("Choose file"));
+	layout->addWidget(btnFileChoice);
+	
+	// создаем кнопку для отправки файла
+	QPushButton *btnSend = new QPushButton();
+	btnSend->setObjectName(uniqueName + sBtnSend);
+	btnSend->setAccessibleName(uniqueName);
+	btnSend->setText(tr("Send file"));
+	layout->addWidget(btnSend);
+
+	// TODO тут возможна утечка памяти (см. https://wiki.qt.io/New_Signal_Slot_Syntax/ru)
+	connect(btnFileChoice, &QPushButton::clicked, [fileCmd, this]() {
+		QString fileName = QFileDialog::getOpenFileName(this, tr("Choose file to send"));
+		fileCmd->setText(fileName);
+	});	
+	connect(btnSend, &QPushButton::clicked, this, &QWinMainWindowTerminal::slotBtnSendFile);
 }
 
 // ======================================================================
@@ -254,8 +341,19 @@ void QWinMainWindowTerminal::slotBtnRescanPorts()
 	* @param  
 	* @retval 
 	*/
-void QWinMainWindowTerminal::slotBtnAddCmd()
+void QWinMainWindowTerminal::slotBtnAddRow()
 {
+	// на главном окне несколько кнопок для создания "строк" команд.
+	// можем добавить строку для текстовой команды, можем как файл
+	// и чтобы не городить несколько обработчиков сигналов и слотов,
+	// обработку всех кнопок повешали на один слот, в котором проверяется
+	// тип добавляемой записи
+	QWidget *w = (QWidget*)sender();
+	if (!w) {
+		qWarning() << "Widget sender is NULL!";
+		return;
+	}
+	QString type = w->accessibleName();
 	QString uniqueName = QUuid::createUuid().toString();
 	
 	// костыль для того, чтобы создать уникальное имя, но обрезав при этом фигурные скобки
@@ -265,34 +363,15 @@ void QWinMainWindowTerminal::slotBtnAddCmd()
 	// создаем слой, который будет содержать элементы для команды
 	QHBoxLayout *layout = new QHBoxLayout();
 	layout->setObjectName(uniqueName);
-	
-	// создаем поле для ввода команды
-	QLineEdit *cmdText = new QLineEdit();
-	cmdText->setObjectName(uniqueName + sCmdText);
-	layout->addWidget(cmdText);
-	
-	// создаем чек-бокс для добавления перевода строки и возврата коретки
-	QCheckBox *chRn = new QCheckBox();
-	chRn->setObjectName(uniqueName + sChRn);
-	chRn->setChecked(false);
-	chRn->setText(tr("Add \\r\\n"));
-	layout->addWidget(chRn);
-
-	// создаем чек-бокс для HEX представления 
-	QCheckBox *chHex = new QCheckBox();
-	chHex->setObjectName(uniqueName + sChHex);
-	chHex->setChecked(false);
-	chHex->setText(tr("HEX"));
-	layout->addWidget(chHex);
-	
-	// создаем кнопку для отправки команды
-	QPushButton *btnSend = new QPushButton();
-	btnSend->setObjectName(uniqueName + sBtnSend);
-	btnSend->setAccessibleName(uniqueName);
-	btnSend->setText(tr("Send command"));
-	layout->addWidget(btnSend);
+	// отдельные виджеты для конкретной реализации типа строки
+	if (type == "command") {
+		addCommandRow(uniqueName, layout);
+	} else if (type == "file") {
+		addFileRow(uniqueName, layout);
+	}
 	
 	// создаем кнопку для удаление строки с командой
+	// она общая для всех типов строк
 	QPushButton *btnDel = new QPushButton();
 	btnDel->setObjectName(uniqueName + sBtnDel);
 	btnDel->setAccessibleName(uniqueName);
@@ -300,7 +379,6 @@ void QWinMainWindowTerminal::slotBtnAddCmd()
 	layout->addWidget(btnDel);
 	
 	// создаем связку слотов/сигналов
-	connect(btnSend, &QPushButton::clicked, this, &QWinMainWindowTerminal::slotBtnSendCmd);
 	connect(btnDel, &QPushButton::clicked, this, &QWinMainWindowTerminal::slotBtnDelCmd);
 	
 	mUi->listCmds->addLayout(layout);
@@ -350,6 +428,36 @@ void QWinMainWindowTerminal::slotBtnSendCmd()
 	cmd.mIsHex = chHex->isChecked();
 
 	MAIN_CLASS()->getTerminal()->sendCommand(cmd);
+}
+
+// ======================================================================
+
+/**
+	* @brief  Клик кнопки "Send file". Отправка файла в порт
+	* @param  
+	* @retval 
+	*/
+void QWinMainWindowTerminal::slotBtnSendFile()
+{
+	QWidget *btnSender = (QWidget*)sender();
+	if (!btnSender) {
+		qWarning() << "Sender in NULL!";
+		return;
+	}
+	
+	QString layoutName = btnSender->accessibleName();
+
+	QLineEdit *fileName = findChild<QLineEdit*>(layoutName + sFileName);
+	
+	if (!fileName) {
+		qWarning() << "Cannot find widget(s) in command row";
+		return;
+	}
+	
+	SFileSendDesc fileSend;
+	fileSend.mFileName = fileName->text();
+
+	MAIN_CLASS()->getTerminal()->sendFile(fileSend);
 }
 
 // ======================================================================

@@ -6,6 +6,7 @@
 #define QWINMAINWINDOWTERMINAL_H
 
 #include <QMainWindow>
+#include <QBoxLayout>
 
 #include "Collections/Interfaces.h"
 
@@ -35,6 +36,8 @@ public:
 protected:
 	void makeSignalSlots();
 	void rescanPorts();
+	void addCommandRow(const QString &uniqueName, QBoxLayout *layout);
+	void addFileRow(const QString &uniqueName, QBoxLayout *layout);
 	
 // ======================================================================
 	
@@ -46,9 +49,10 @@ protected:
 protected slots:
 	void slotBtnPortOpenClose();
 	void slotBtnRescanPorts();
-	void slotBtnAddCmd();
+	void slotBtnAddRow();
 	void slotChAutoreconnect();
 	void slotBtnSendCmd();
+	void slotBtnSendFile();
 	void slotBtnDelCmd();
 	
 	
