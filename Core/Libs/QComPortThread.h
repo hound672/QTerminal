@@ -39,6 +39,11 @@ public:
 		QSerialPort::FlowControl mFlowControl;
 	};
 	
+	static const QMap<QSerialPort::BaudRate, QString> sBaudRateList;
+	static const QMap<QSerialPort::DataBits, QString> sDataBitsList;
+	static const QMap<QSerialPort::Parity, QString> sParityList;
+	static const QMap<QSerialPort::StopBits, QString> sStopBitsList;
+	
 // ======================================================================
 
 public:
@@ -50,7 +55,7 @@ public:
   void close();
   void sendData(const QByteArray &data);
 	// ======================================================================
-	QList<QSerialPortInfo> getPortsList() const;
+	QList<QSerialPortInfo> getListPorts() const;
 	
 // ======================================================================
 

@@ -2,6 +2,7 @@
 #define COLLECTIONS_H
 
 #include <QByteArray>
+#include <Core/Libs/QComPortThread.h>
 
 // ======================================================================
 //  ***** Список результатов выполнения действий *****                       

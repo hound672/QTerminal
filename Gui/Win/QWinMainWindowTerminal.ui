@@ -32,7 +32,7 @@
        <x>4</x>
        <y>15</y>
        <width>221</width>
-       <height>61</height>
+       <height>126</height>
       </rect>
      </property>
      <layout class="QFormLayout" name="formLayout">
@@ -44,25 +44,55 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="portsList"/>
+       <widget class="QComboBox" name="listPorts"/>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>Boud</string>
+         <string>Baud</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QComboBox" name="comboBox_2"/>
+       <widget class="QComboBox" name="listBaudrate"/>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="listDataBits"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Data bits</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Parity</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>StopBits</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QComboBox" name="listParity"/>
+      </item>
+      <item row="4" column="1">
+       <widget class="QComboBox" name="listStopBits"/>
       </item>
      </layout>
     </widget>
     <widget class="QWidget" name="verticalLayoutWidget">
      <property name="geometry">
       <rect>
-       <x>4</x>
-       <y>80</y>
+       <x>0</x>
+       <y>170</y>
        <width>221</width>
        <height>80</height>
       </rect>
@@ -88,7 +118,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>170</y>
+       <y>260</y>
        <width>151</width>
        <height>17</height>
       </rect>

@@ -8,6 +8,38 @@
 #include "Core/Libs/QComPortThread.h"
 
 // ======================================================================
+const QMap<QSerialPort::BaudRate, QString> QComPortThread::sBaudRateList = {
+	{QSerialPort::Baud1200, "1200"},
+	{QSerialPort::Baud2400, "2400"},
+	{QSerialPort::Baud4800, "4800"},
+	{QSerialPort::Baud9600, "9600"},
+	{QSerialPort::Baud19200, "19200"},
+	{QSerialPort::Baud38400, "38400"},
+	{QSerialPort::Baud57600, "57600"},
+	{QSerialPort::Baud115200, "115200"},
+};
+
+const QMap<QSerialPort::DataBits, QString> QComPortThread::sDataBitsList = {
+	{QSerialPort::Data5, "5"},
+	{QSerialPort::Data6, "6"},
+	{QSerialPort::Data7, "7"},
+	{QSerialPort::Data8, "8"},
+};
+	
+const QMap<QSerialPort::Parity, QString> QComPortThread::sParityList = {
+	{QSerialPort::NoParity, "None"},
+	{QSerialPort::EvenParity, "Even"},
+	{QSerialPort::OddParity, "Odd"},
+	{QSerialPort::SpaceParity, "Space"},
+	{QSerialPort::MarkParity, "Mark"},
+};
+
+const QMap<QSerialPort::StopBits, QString> QComPortThread::sStopBitsList = {
+	{QSerialPort::OneStop, "1"},
+	{QSerialPort::OneAndHalfStop, "1.5"},
+	{QSerialPort::TwoStop, "2"},
+};
+// ======================================================================
 
 /**
   * @brief  Конструктор класса
@@ -87,7 +119,7 @@ void QComPortThread::sendData(const QByteArray &data)
 	* @param  
 	* @retval 
 	*/
-QList<QSerialPortInfo> QComPortThread::getPortsList() const
+QList<QSerialPortInfo> QComPortThread::getListPorts() const
 {
 	return QSerialPortInfo::availablePorts();
 }
@@ -195,6 +227,10 @@ void QComPortThread::slotOpen()
 	bool res = mPort->open(QIODevice::ReadWrite);
 	emit signalResultOpen(res);
 	qDebugComPort() << "Port: " << mPort->portName()
+									<< ". BaudRate: " << mPort->baudRate()
+									<< ". DataBits: " << mPort->dataBits()
+									<< ". Parity: " << mPort->parity()
+									<< ". StopBits: " << mPort->stopBits()
 									<< ". Result open: " << res;
 }
 

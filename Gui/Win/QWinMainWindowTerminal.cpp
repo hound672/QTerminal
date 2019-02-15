@@ -60,6 +60,27 @@ void QWinMainWindowTerminal::init()
 	
 	// изменяем состояние главного окна в зависимости от прочитаных настроек
 	mUi->chAutoreconnect->setChecked(APP_SETTINGS()->TERMINAL.AUTO_RECONNECT);
+	
+	// заполняем список со значениями BaudRate
+	foreach (QSerialPort::BaudRate baudRate, QComPortThread::sBaudRateList.keys()) {
+		mUi->listBaudrate->addItem(QComPortThread::sBaudRateList[baudRate], baudRate);
+	}
+	
+	// заполняем значения DataBits
+	foreach (QSerialPort::DataBits dataBits, QComPortThread::sDataBitsList.keys()) {
+		mUi->listDataBits->addItem(QComPortThread::sDataBitsList[dataBits], dataBits);
+	}
+	mUi->listDataBits->setCurrentIndex(QComPortThread::sDataBitsList.size()-1);
+
+	// заполняем значения Parity
+	foreach (QSerialPort::Parity parity, QComPortThread::sParityList.keys()) {
+		mUi->listParity->addItem(QComPortThread::sParityList[parity], parity);
+	}
+	
+	// заполняем список StopBits
+	foreach (QSerialPort::StopBits stopBits, QComPortThread::sStopBitsList.keys()) {
+		mUi->listStopBits->addItem(QComPortThread::sStopBitsList[stopBits], stopBits);
+	}
 }
 
 // ======================================================================
@@ -85,13 +106,13 @@ void QWinMainWindowTerminal::show()
 QComPortThread::SSettings QWinMainWindowTerminal::getPortSettings()
 {
 	QComPortThread::SSettings settings;
-	settings.mPortName = mUi->portsList->currentText();
+	settings.mPortName = mUi->listPorts->currentText();
+	settings.mBoudRate =  (QSerialPort::BaudRate)mUi->listBaudrate->currentData().toUInt();
+	settings.mDataBits = (QSerialPort::DataBits)mUi->listDataBits->currentData().toInt();
+	settings.mParity = (QSerialPort::Parity)mUi->listParity->currentData().toInt();
+	settings.mStopBits = (QSerialPort::StopBits)mUi->listStopBits->currentData().toInt();
 	
 	// FIXME mock settings
-	settings.mBoudRate = (QSerialPort::BaudRate)115200;
-	settings.mDataBits = (QSerialPort::DataBits)8;
-	settings.mParity = (QSerialPort::Parity)0;
-	settings.mStopBits = (QSerialPort::StopBits)1;
 	settings.mFlowControl = (QSerialPort::FlowControl)0;
 	
 	return settings;
@@ -110,6 +131,11 @@ void QWinMainWindowTerminal::setStateWindow(EWindowState newState)
 	bool btnRescanPortsEnabled;
 	bool btnAddCmdEnabled;
 	bool btnAddFileEnabled;
+	bool listPortsEnabled;
+	bool listBaudRateEnabled;
+	bool listDataBitsEnabled;
+	bool listParityEnabled;
+	bool listStopBitsEnabled;
 	
 	switch (newState)
 	{
@@ -118,6 +144,11 @@ void QWinMainWindowTerminal::setStateWindow(EWindowState newState)
 		btnRescanPortsEnabled = true;
 		btnAddCmdEnabled = false;
 		btnAddFileEnabled = false;
+		listPortsEnabled = true;
+		listBaudRateEnabled = true;
+		listDataBitsEnabled = true;
+		listParityEnabled = true;
+		listStopBitsEnabled = true;
 		break;
 	// ======================================================================
 	case stsConnecting:
@@ -125,6 +156,11 @@ void QWinMainWindowTerminal::setStateWindow(EWindowState newState)
 		btnRescanPortsEnabled = false;
 		btnAddCmdEnabled = false;
 		btnAddFileEnabled = false;
+		listPortsEnabled = false;
+		listBaudRateEnabled = false;
+		listDataBitsEnabled = false;
+		listParityEnabled = false;
+		listStopBitsEnabled = false;
 		break;
 	// ======================================================================
 	case stsConnected:
@@ -132,6 +168,11 @@ void QWinMainWindowTerminal::setStateWindow(EWindowState newState)
 		btnRescanPortsEnabled = false;
 		btnAddCmdEnabled = true;
 		btnAddFileEnabled = true;
+		listPortsEnabled = false;
+		listBaudRateEnabled = false;
+		listDataBitsEnabled = false;
+		listParityEnabled = false;
+		listStopBitsEnabled = false;
 		break;
 	}
 	
@@ -139,6 +180,11 @@ void QWinMainWindowTerminal::setStateWindow(EWindowState newState)
 	mUi->btnRescanPorts->setEnabled(btnRescanPortsEnabled);
 	mUi->btnAddCmd->setEnabled(btnAddCmdEnabled);
 	mUi->btnAddFile->setEnabled(btnAddFileEnabled);
+	mUi->listPorts->setEnabled(listPortsEnabled);
+	mUi->listBaudrate->setEnabled(listBaudRateEnabled);
+	mUi->listDataBits->setEnabled(listDataBitsEnabled);
+	mUi->listParity->setEnabled(listParityEnabled);
+	mUi->listStopBits->setEnabled(listStopBitsEnabled);
 }
 
 // ======================================================================
@@ -221,11 +267,11 @@ void QWinMainWindowTerminal::makeSignalSlots()
 	*/
 void QWinMainWindowTerminal::rescanPorts()
 {
-	QList<QSerialPortInfo> portsList = MAIN_CLASS()->getPort()->getPortsList();
+	QList<QSerialPortInfo> listPorts = MAIN_CLASS()->getPort()->getListPorts();
 	
-	mUi->portsList->clear();
-	foreach (QSerialPortInfo portInfo, portsList) {
-		mUi->portsList->addItem(portInfo.portName());
+	mUi->listPorts->clear();
+	foreach (QSerialPortInfo portInfo, listPorts) {
+		mUi->listPorts->addItem(portInfo.portName());
 	}
 }
 
