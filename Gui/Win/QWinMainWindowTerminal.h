@@ -43,6 +43,7 @@ protected:
 	
 protected:
 	Ui::QWinMainWindowTerminal *mUi;
+	QList<QWidget*> mListWidgetsGroup;	// список виджетов, enabled которых одинаковый от состояния порта
 	
 // ======================================================================
 	

@@ -34,6 +34,14 @@ QWinMainWindowTerminal::QWinMainWindowTerminal() :
 	mUi(new Ui::QWinMainWindowTerminal)
 {
 	mUi->setupUi(this);
+	
+	// добавляем виджеты enabled которых зависит от состояния порта
+	mListWidgetsGroup << mUi->btnRescanPorts
+										<< mUi->listPorts
+										<< mUi->listBaudrate
+										<< mUi->listDataBits
+										<< mUi->listParity
+										<< mUi->listStopBits;
 }
 
 // ======================================================================
@@ -128,63 +136,40 @@ QComPortThread::SSettings QWinMainWindowTerminal::getPortSettings()
 void QWinMainWindowTerminal::setStateWindow(EWindowState newState)
 {
 	QString btnPortOpenCloseText;
-	bool btnRescanPortsEnabled;
 	bool btnAddCmdEnabled;
 	bool btnAddFileEnabled;
-	bool listPortsEnabled;
-	bool listBaudRateEnabled;
-	bool listDataBitsEnabled;
-	bool listParityEnabled;
-	bool listStopBitsEnabled;
+	bool stateGoupWidgets;
 	
 	switch (newState)
 	{
 	case stsIdle:
 		btnPortOpenCloseText = tr("Open");
-		btnRescanPortsEnabled = true;
 		btnAddCmdEnabled = false;
 		btnAddFileEnabled = false;
-		listPortsEnabled = true;
-		listBaudRateEnabled = true;
-		listDataBitsEnabled = true;
-		listParityEnabled = true;
-		listStopBitsEnabled = true;
+		stateGoupWidgets = true;
 		break;
 	// ======================================================================
 	case stsConnecting:
-		btnPortOpenCloseText = tr("Opening");
-		btnRescanPortsEnabled = false;
+		btnPortOpenCloseText = tr("Cancel opening");
 		btnAddCmdEnabled = false;
 		btnAddFileEnabled = false;
-		listPortsEnabled = false;
-		listBaudRateEnabled = false;
-		listDataBitsEnabled = false;
-		listParityEnabled = false;
-		listStopBitsEnabled = false;
+		stateGoupWidgets = false;
 		break;
 	// ======================================================================
 	case stsConnected:
 		btnPortOpenCloseText = tr("Close");
-		btnRescanPortsEnabled = false;
 		btnAddCmdEnabled = true;
 		btnAddFileEnabled = true;
-		listPortsEnabled = false;
-		listBaudRateEnabled = false;
-		listDataBitsEnabled = false;
-		listParityEnabled = false;
-		listStopBitsEnabled = false;
+		stateGoupWidgets = false;
 		break;
 	}
 	
 	mUi->btnPortOpenClose->setText(btnPortOpenCloseText);
-	mUi->btnRescanPorts->setEnabled(btnRescanPortsEnabled);
 	mUi->btnAddCmd->setEnabled(btnAddCmdEnabled);
 	mUi->btnAddFile->setEnabled(btnAddFileEnabled);
-	mUi->listPorts->setEnabled(listPortsEnabled);
-	mUi->listBaudrate->setEnabled(listBaudRateEnabled);
-	mUi->listDataBits->setEnabled(listDataBitsEnabled);
-	mUi->listParity->setEnabled(listParityEnabled);
-	mUi->listStopBits->setEnabled(listStopBitsEnabled);
+	foreach (QWidget *widget, mListWidgetsGroup) {
+		widget->setEnabled(stateGoupWidgets);
+	}
 }
 
 // ======================================================================
