@@ -276,12 +276,22 @@ void QTerminal::slotPortResultOpen(bool res)
 	*/
 void QTerminal::slotPortClose()
 {
-	mGui->writeLog(tr("Port is closed by itself"));
-	// если в настройках стоит автоматический реконект, то пытаемся снова открыть порт
-	if (APP_SETTINGS()->TERMINAL.AUTO_RECONNECT) {
-		setStateConnecting();
-	} else {
-		setStateIdle(); 
+	qDebug() << "..." << getStateStr();
+	// TODO проверить логику работы с отключением устройства
+	
+	switch (getState()) {
+	// ======================================================================
+	case stConnected:
+		// если в настройках стоит автоматический реконект, то пытаемся снова открыть порт
+		if (APP_SETTINGS()->TERMINAL.AUTO_RECONNECT) {
+			setStateConnecting();
+		} else {
+			setStateIdle(); 
+		}
+		break;
+	// ======================================================================
+	default:
+		break;
 	}
 }
 

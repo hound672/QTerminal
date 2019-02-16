@@ -35,6 +35,7 @@ protected:
 	void setTimer(quint32 timeout = U32_MAX_VALUE);
 	void setState(int newState);
 	int getState() const;
+	QString getStateStr() const;
 	// ======================================================================
 	virtual void onEvTimer() {}
 	
