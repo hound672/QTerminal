@@ -7,6 +7,7 @@
 
 #include <QMainWindow>
 #include <QBoxLayout>
+#include <QComboBox>
 
 #include "Collections/Interfaces.h"
 
@@ -38,6 +39,7 @@ protected:
 	void rescanPorts();
 	void addCommandRow(const QString &uniqueName, QBoxLayout *layout);
 	void addFileRow(const QString &uniqueName, QBoxLayout *layout);
+	static void setCurrentIndex(QComboBox *comboBox, const QVariant &value);
 	
 // ======================================================================
 	
@@ -51,7 +53,7 @@ protected slots:
 	void slotBtnPortOpenClose();
 	void slotBtnRescanPorts();
 	void slotBtnAddRow();
-	void slotChAutoreconnect();
+	void slotSettingsChanged();
 	void slotBtnSendCmd();
 	void slotBtnSendFile();
 	void slotBtnDelCmd();

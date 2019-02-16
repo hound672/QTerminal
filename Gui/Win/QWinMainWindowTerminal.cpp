@@ -64,31 +64,38 @@ QWinMainWindowTerminal::~QWinMainWindowTerminal()
 	*/
 void QWinMainWindowTerminal::init()
 {
-	makeSignalSlots();	
+	rescanPorts();
 	
 	// изменяем состояние главного окна в зависимости от прочитаных настроек
 	mUi->chAutoreconnect->setChecked(APP_SETTINGS()->TERMINAL.AUTO_RECONNECT);
+	
+	QWinMainWindowTerminal::setCurrentIndex(mUi->listPorts, APP_SETTINGS()->PORT.NAME);
 	
 	// заполняем список со значениями BaudRate
 	foreach (QSerialPort::BaudRate baudRate, QComPortThread::sBaudRateList.keys()) {
 		mUi->listBaudrate->addItem(QComPortThread::sBaudRateList[baudRate], baudRate);
 	}
+	QWinMainWindowTerminal::setCurrentIndex(mUi->listBaudrate, APP_SETTINGS()->PORT.BAUDRATE);
 	
 	// заполняем значения DataBits
 	foreach (QSerialPort::DataBits dataBits, QComPortThread::sDataBitsList.keys()) {
 		mUi->listDataBits->addItem(QComPortThread::sDataBitsList[dataBits], dataBits);
 	}
-	mUi->listDataBits->setCurrentIndex(QComPortThread::sDataBitsList.size()-1);
+	QWinMainWindowTerminal::setCurrentIndex(mUi->listDataBits, APP_SETTINGS()->PORT.DATABITS);
 
 	// заполняем значения Parity
 	foreach (QSerialPort::Parity parity, QComPortThread::sParityList.keys()) {
 		mUi->listParity->addItem(QComPortThread::sParityList[parity], parity);
 	}
+	QWinMainWindowTerminal::setCurrentIndex(mUi->listParity, APP_SETTINGS()->PORT.PARITY);
 	
 	// заполняем список StopBits
 	foreach (QSerialPort::StopBits stopBits, QComPortThread::sStopBitsList.keys()) {
 		mUi->listStopBits->addItem(QComPortThread::sStopBitsList[stopBits], stopBits);
 	}
+	QWinMainWindowTerminal::setCurrentIndex(mUi->listStopBits, APP_SETTINGS()->PORT.STOPBITS);
+	
+	makeSignalSlots();
 }
 
 // ======================================================================
@@ -100,7 +107,6 @@ void QWinMainWindowTerminal::init()
 	*/
 void QWinMainWindowTerminal::show()
 {
-	rescanPorts();
 	QMainWindow::show();
 }
 
@@ -235,8 +241,20 @@ void QWinMainWindowTerminal::makeSignalSlots()
 					this, &QWinMainWindowTerminal::slotBtnPortOpenClose);
 	connect(mUi->btnRescanPorts, &QPushButton::clicked,
 					this, &QWinMainWindowTerminal::slotBtnRescanPorts);
+	
 	connect(mUi->chAutoreconnect, &QCheckBox::clicked,
-					this, &QWinMainWindowTerminal::slotChAutoreconnect);
+					this, &QWinMainWindowTerminal::slotSettingsChanged);
+	connect(mUi->listPorts, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+					this, &QWinMainWindowTerminal::slotSettingsChanged);
+	connect(mUi->listBaudrate, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+					this, &QWinMainWindowTerminal::slotSettingsChanged);
+	connect(mUi->listDataBits, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+					this, &QWinMainWindowTerminal::slotSettingsChanged);
+	connect(mUi->listParity, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+					this, &QWinMainWindowTerminal::slotSettingsChanged);
+	connect(mUi->listStopBits, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+					this, &QWinMainWindowTerminal::slotSettingsChanged);
+	
 	connect(mUi->btnAddCmd, &QPushButton::clicked,
 					this, &QWinMainWindowTerminal::slotBtnAddRow);
 	connect(mUi->btnAddFile, &QPushButton::clicked,
@@ -339,6 +357,30 @@ void QWinMainWindowTerminal::addFileRow(const QString &uniqueName, QBoxLayout *l
 
 // ======================================================================
 
+/**
+	* @brief  Меняет текущий индекс виджета QComboBox в зависимости от значения в userData
+	*					или Text переданом в параметре value
+	* @param  comboBox: виджет ComboBox, индекс которого нужно изменить
+	* @param	value: значение для поиска в полях userData и text
+	* @retval 
+	*/
+void QWinMainWindowTerminal::setCurrentIndex(QComboBox *comboBox, const QVariant &value)
+{
+	int i;
+	
+	i = comboBox->findData(value);
+	if (i == -1) {
+		i = comboBox->findText(value.toString());
+	}
+	
+	if (i == -1) {
+		return;
+	}
+	comboBox->setCurrentIndex(i);
+}
+
+// ======================================================================
+
 // ======================================================================
 //  protected slots                       
 // ======================================================================
@@ -418,13 +460,19 @@ void QWinMainWindowTerminal::slotBtnAddRow()
 // ======================================================================
 
 /**
-	* @brief  Смена состояния чек бокса auto_reconnect
+	* @brief  Смена настроек порта, приложения
 	* @param  
 	* @retval 
 	*/
-void QWinMainWindowTerminal::slotChAutoreconnect()
+void QWinMainWindowTerminal::slotSettingsChanged()
 {
 	APP_SETTINGS()->TERMINAL.AUTO_RECONNECT = mUi->chAutoreconnect->isChecked();
+	
+	APP_SETTINGS()->PORT.NAME = mUi->listPorts->currentText();
+	APP_SETTINGS()->PORT.BAUDRATE = mUi->listBaudrate->currentData().toUInt();
+	APP_SETTINGS()->PORT.DATABITS = mUi->listDataBits->currentData().toInt();
+	APP_SETTINGS()->PORT.PARITY = mUi->listParity->currentData().toInt();
+	APP_SETTINGS()->PORT.STOPBITS = mUi->listStopBits->currentData().toInt();
 }
 
 // ======================================================================
