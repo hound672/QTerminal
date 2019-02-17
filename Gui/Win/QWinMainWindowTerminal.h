@@ -57,6 +57,7 @@ protected slots:
 	void slotBtnSendCmd();
 	void slotBtnSendFile();
 	void slotBtnDelCmd();
+	void slotBtnClear();
 	
 	
 // ======================================================================

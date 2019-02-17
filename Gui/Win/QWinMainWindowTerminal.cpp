@@ -259,6 +259,9 @@ void QWinMainWindowTerminal::makeSignalSlots()
 					this, &QWinMainWindowTerminal::slotBtnAddRow);
 	connect(mUi->btnAddFile, &QPushButton::clicked,
 					this, &QWinMainWindowTerminal::slotBtnAddRow);
+	
+	connect(mUi->btnClear, &QPushButton::clicked,
+					this, &QWinMainWindowTerminal::slotBtnClear);
 }
 
 // ======================================================================
@@ -572,6 +575,18 @@ void QWinMainWindowTerminal::slotBtnDelCmd()
 		widget->deleteLater();
 	}
 	layout->deleteLater();
+}
+
+// ======================================================================
+
+/**
+	* @brief  Кнопка: очистить текст лога
+	* @param  
+	* @retval 
+	*/
+void QWinMainWindowTerminal::slotBtnClear()
+{
+	mUi->textData->clear();
 }
 
 // ======================================================================

@@ -1,5 +1,6 @@
 #include <QDebug>
 #include <QRegExp>
+#include <QFile>
 
 #include "Core/Utils/QStringUtils.h"
 
@@ -162,7 +163,24 @@ void QTerminal::sendCommand(const SCommandDesc &cmd)
 	*/
 void QTerminal::sendFile(const SFileSendDesc &fileSend)
 {
-	qDebug() << "Send file: " << fileSend.mFileName;
+	QFile file(fileSend.mFileName);
+	
+	if (!file.exists()) {
+		qDebug() << "File does not exist";
+		// TODO передача сообщения об ошибке в главное окно
+		return;
+	}
+	
+	if (!file.open(QIODevice::ReadOnly)) {
+		qDebug() << "Error open file";
+		// TODO передача сообщения об ошибке в главное окно
+		return;
+	}
+	
+	// TODO тут возможно понадобится чтение не всего файла сразу, а по частям
+	// для экономии памяти
+	QByteArray data = file.readAll();
+	mPort->sendData(data);
 }
 
 // ======================================================================
