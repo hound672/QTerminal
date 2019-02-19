@@ -37,8 +37,11 @@ void QMainClass::setArgs(int argc, char **argv)
 
 QMainClass *QMainClass::getMainClass()
 {
-	static QMainClass mainClass(sArgc, sArgv);
-	return &mainClass;
+	static QMainClass *mainClass = NULL;
+	if (!mainClass) {
+		mainClass = new QMainClass(sArgc, sArgv);
+	}
+	return mainClass;
 }
 
 // ======================================================================

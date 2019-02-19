@@ -191,9 +191,12 @@ void QWinMainWindowTerminal::addData(const QByteArray &data)
 	
 	// TODO продумать свпособ по лучше передавать данные
 	foreach (quint8 c, data) {
+		// FIXME тут иначе при большом кол-ве полученых нулей зависает программа
+		if (c == 0) continue;
 		str.append(c);
 	}
 
+	mUi->textData->moveCursor(QTextCursor::End);
 	mUi->textData->insertPlainText(str);
 	mUi->textData->moveCursor(QTextCursor::End);
 }

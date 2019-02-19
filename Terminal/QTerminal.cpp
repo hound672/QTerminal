@@ -327,6 +327,7 @@ void QTerminal::slotReadData(const QByteArray &data)
 		return;
 	}
 	
+//	qDebug() << "Got data. Length: " << data.length();
 	mGui->addData(data);
 }
 
