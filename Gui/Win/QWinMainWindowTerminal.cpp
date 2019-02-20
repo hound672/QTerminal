@@ -113,28 +113,6 @@ void QWinMainWindowTerminal::show()
 // ======================================================================
 
 /**
-	* @brief  Возвращает структуру с настройками порта из пользовательского интерфейса
-	* @param  None
-	* @retval QComPortThread::SSettings: структура с настройками порта
-	*/
-QComPortThread::SSettings QWinMainWindowTerminal::getPortSettings()
-{
-	QComPortThread::SSettings settings;
-	settings.mPortName = mUi->listPorts->currentText();
-	settings.mBoudRate =  (QSerialPort::BaudRate)mUi->listBaudrate->currentData().toUInt();
-	settings.mDataBits = (QSerialPort::DataBits)mUi->listDataBits->currentData().toInt();
-	settings.mParity = (QSerialPort::Parity)mUi->listParity->currentData().toInt();
-	settings.mStopBits = (QSerialPort::StopBits)mUi->listStopBits->currentData().toInt();
-	
-	// FIXME mock settings
-	settings.mFlowControl = (QSerialPort::FlowControl)0;
-	
-	return settings;
-}
-
-// ======================================================================
-
-/**
 	* @brief  Меняет состояние кнопки открытия/закрытия порта
 	* @param  
 	* @retval 
@@ -142,8 +120,8 @@ QComPortThread::SSettings QWinMainWindowTerminal::getPortSettings()
 void QWinMainWindowTerminal::setStateWindow(EWindowState newState)
 {
 	QString btnPortOpenCloseText;
-	bool groupCommandsEnabled;
-	bool stateGoupWidgets;
+	bool groupCommandsEnabled = false;
+	bool stateGoupWidgets = false;
 	
 	switch (newState)
 	{

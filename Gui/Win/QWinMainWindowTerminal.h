@@ -25,7 +25,6 @@ public:
 	// ======================================================================
 	void init();
 	void show();
-	QComPortThread::SSettings getPortSettings();
 	void setStateWindow(EWindowState newState);
 	void addData(const QByteArray &data);
 	// ======================================================================

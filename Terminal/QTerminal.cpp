@@ -239,7 +239,13 @@ void QTerminal::setStateConnecting()
 	setState(stConnecting);
 	
 	// меняем настройки порта
-	QComPortThread::SSettings settings = MAIN_CLASS()->getGui()->getPortSettings();
+	QComPortThread::SSettings settings;
+	settings.mPortName = APP_SETTINGS()->PORT.NAME;
+	settings.mBoudRate =  (QSerialPort::BaudRate)APP_SETTINGS()->PORT.BAUDRATE;
+	settings.mDataBits = (QSerialPort::DataBits)APP_SETTINGS()->PORT.DATABITS;
+	settings.mParity = (QSerialPort::Parity)APP_SETTINGS()->PORT.PARITY;
+	settings.mStopBits = (QSerialPort::StopBits)APP_SETTINGS()->PORT.STOPBITS;
+	
 	mPort->setSettings(settings);
 	setTimer(0);
 	
@@ -294,9 +300,6 @@ void QTerminal::slotPortResultOpen(bool res)
 	*/
 void QTerminal::slotPortClose()
 {
-	qDebug() << "..." << getStateStr();
-	// TODO проверить логику работы с отключением устройства
-	
 	switch (getState()) {
 	// ======================================================================
 	case stConnected:

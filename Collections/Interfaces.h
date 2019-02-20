@@ -32,8 +32,6 @@ public:
   virtual void init() = 0;
   // отображение главного окна
   virtual void show() = 0;
-  // возврат настроек порта, которые задал пользователь
-  virtual QComPortThread::SSettings getPortSettings() = 0;
   // смена текущего состояния окна
   virtual void setStateWindow(EWindowState newState) = 0;
   // добавлен плученые из порта данные 
