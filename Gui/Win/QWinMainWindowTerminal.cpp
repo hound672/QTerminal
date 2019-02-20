@@ -142,37 +142,32 @@ QComPortThread::SSettings QWinMainWindowTerminal::getPortSettings()
 void QWinMainWindowTerminal::setStateWindow(EWindowState newState)
 {
 	QString btnPortOpenCloseText;
-	bool btnAddCmdEnabled;
-	bool btnAddFileEnabled;
+	bool groupCommandsEnabled;
 	bool stateGoupWidgets;
 	
 	switch (newState)
 	{
 	case stsIdle:
 		btnPortOpenCloseText = tr("Open");
-		btnAddCmdEnabled = false;
-		btnAddFileEnabled = false;
+		groupCommandsEnabled = false;
 		stateGoupWidgets = true;
 		break;
 	// ======================================================================
 	case stsConnecting:
 		btnPortOpenCloseText = tr("Cancel opening");
-		btnAddCmdEnabled = false;
-		btnAddFileEnabled = false;
+		groupCommandsEnabled = false;
 		stateGoupWidgets = false;
 		break;
 	// ======================================================================
 	case stsConnected:
 		btnPortOpenCloseText = tr("Close");
-		btnAddCmdEnabled = true;
-		btnAddFileEnabled = true;
+		groupCommandsEnabled = true;
 		stateGoupWidgets = false;
 		break;
 	}
 	
 	mUi->btnPortOpenClose->setText(btnPortOpenCloseText);
-	mUi->btnAddCmd->setEnabled(btnAddCmdEnabled);
-	mUi->btnAddFile->setEnabled(btnAddFileEnabled);
+	mUi->groupCommands->setEnabled(groupCommandsEnabled);
 	foreach (QWidget *widget, mListWidgetsGroup) {
 		widget->setEnabled(stateGoupWidgets);
 	}
