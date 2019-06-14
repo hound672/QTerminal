@@ -134,12 +134,6 @@ QList<QSerialPortInfo> QComPortThread::getListPorts() const
 bool QComPortThread::checkPort() const
 { 
   QSerialPortInfo portInfo(mPort->portName());
-	qDebugComPort() << "===== LIST =====";
-	foreach (QSerialPortInfo portInfo, getListPorts()) {
-		qDebugComPort() << "Avaible port: " << portInfo.portName();
-	}
-	qDebugComPort() << "===== LIST =====";
-
 	return !portInfo.isNull();
 }
 

@@ -9,6 +9,7 @@
 
 
 #include <QObject>
+#include <QTimer>
 
 #include "Core/QMonitoringService.h"
 #include "Core/QSettingsApp.h"
@@ -25,21 +26,24 @@ public:
 	// ======================================================================
 	bool IsInit();
 	int Init();
-	int Send(const QString &name, const QVariant &val);
+	int Send(const QString &name, const QVariant &value);
 
 // ======================================================================
 	
 protected:
+	QTimer *mTimer;
 	bool mIsInit;
 	QMqClient *mMqClient;
 	QSettingsApp::SRABBIT_MQ mMqSettings;
 	QSettingsApp::SMONITORING_RABBIT_MQ mMonSettings;
 	QAmqpExchange *mExchange;
+	QHash<QString, QVariant> mMonStore;
 	
 // ======================================================================
 	
 protected slots:
 	void SlotMqDisconnected();
+	void slotTimeout();
 };
 
 #endif // defined(USE_MONITORING_SERVICE) && defined(USE_MONITORING_RABBITMQ)

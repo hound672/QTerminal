@@ -9,7 +9,8 @@
 #include <QUrl>
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
-
+#include <QJsonObject>
+#include <QJsonDocument>
 
 class QServerApi : public QObject
 {
@@ -45,6 +46,9 @@ public:
   QByteArray sendRequest(const QUrl &url, int &resultCode,
                          ERequestTypes requestType = requestGet,
                          const QByteArray &dataToSend = QByteArray());
+	QJsonDocument sendRequest(const QUrl &url, int &resultCode,
+                         ERequestTypes requestType = requestGet,
+                         const QJsonObject &dataToSend = QJsonObject());
 	
 // ======================================================================
 	

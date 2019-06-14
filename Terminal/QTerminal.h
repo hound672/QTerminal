@@ -13,7 +13,7 @@
 
 #include "Collections/Interfaces.h"
 
-class QTerminal : public QStateMachineEx
+class QTerminal : public QObject, public QStateMachineEx
 {
 	Q_OBJECT
 	
@@ -38,12 +38,11 @@ public:
 protected:
 	QComPortThread *mPort;
 	IGui *mGui;
+	QTimer mTimer;
 	
 // ======================================================================
 	
 protected:
-	void onEvTimer();
-	// ======================================================================
 	void setStateIdle();
 	void setStateConnecting();
 	void setStateConnected();
@@ -51,6 +50,7 @@ protected:
 // ======================================================================
 	
 protected slots:
+	void slotTimer();
 	void slotPortResultOpen(bool res);
 	void slotPortClose();
 	void slotReadData(const QByteArray &data);

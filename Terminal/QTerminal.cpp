@@ -59,7 +59,8 @@ TABLE_MAKE()
 // ======================================================================
 
 QTerminal::QTerminal(QObject *parent) : 
-	QStateMachineEx("Terminal", sStatesList, parent)
+	QObject(parent),
+	QStateMachineEx("Terminal", sStatesList)
 {
 }
 
@@ -88,6 +89,8 @@ void QTerminal::init()
 	connect(mPort, &QComPortThread::signalResultOpen, this, &QTerminal::slotPortResultOpen);
 	connect(mPort, &QComPortThread::signalClose, this, &QTerminal::slotPortClose);
 	connect(mPort, &QComPortThread::signalIncomingData, this, &QTerminal::slotReadData);
+
+	connect(&mTimer, &QTimer::timeout, this, &QTerminal::slotTimer);
 	
 	// переход в начальное состояние
 	setStateIdle();
@@ -189,26 +192,6 @@ void QTerminal::sendFile(const SFileSendDesc &fileSend)
 //  protected                       
 // ======================================================================
 
-/**
-	* @brief  Таймаут таймера
-	* @param  
-	* @retval 
-	*/
-void QTerminal::onEvTimer()
-{
-	switch (getState())
-	{
-	case stConnecting:
-		mPort->open();
-		break;
-	// ======================================================================
-	default:
-		break;
-	}
-}
-
-// ======================================================================
-
 // ======================================================================
 //  states                       
 // ======================================================================
@@ -247,7 +230,7 @@ void QTerminal::setStateConnecting()
 	settings.mStopBits = (QSerialPort::StopBits)APP_SETTINGS()->PORT.STOPBITS;
 	
 	mPort->setSettings(settings);
-	setTimer(0);
+	mTimer.start(0);
 	
 	// меняем состояние главного окна
 	mGui->setStateWindow(IGui::stsConnecting);
@@ -275,6 +258,22 @@ void QTerminal::setStateConnected()
 //  protected slots                       
 // ======================================================================
 
+void QTerminal::slotTimer()
+{
+	switch (getState())
+	{
+	case stConnecting:
+		mPort->open();
+		break;
+	// ======================================================================
+	default:
+		break;
+	}
+
+}
+
+// ======================================================================
+
 /**
 	* @brief  Обработка результата открытия порта
 	* @param  
@@ -285,7 +284,7 @@ void QTerminal::slotPortResultOpen(bool res)
 	mGui->writeLog(tr("Result open port"), res ? EResultCodes::resOk : EResultCodes::resError);
 	if (!res) {
 		// порт не был открыт, повторяем открытие порта через 1сек.
-		setTimer(TIMEOUT_TRY_OPEN_PORT);
+		mTimer.start(TIMEOUT_TRY_OPEN_PORT);
 		return;
 	}
 	setStateConnected();

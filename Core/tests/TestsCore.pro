@@ -24,7 +24,8 @@ SOURCES += main.cpp \
     Libs/QTestComPortThread.cpp \
     ../QThreadWorker.cpp \
     ../Libs/QComPortThread.cpp \
-    Utils/QTestStringUtils.cpp
+    Utils/QTestStringUtils.cpp \
+    QTestBitsSet.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -48,5 +49,6 @@ HEADERS += \
     Libs/QTestComPortThread.h \
     ../QThreadWorker.h \
     ../Libs/QComPortThread.h \
-    Utils/QTestStringUtils.h
+    Utils/QTestStringUtils.h \
+    QTestBitsSet.h
 

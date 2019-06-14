@@ -13,6 +13,7 @@
 
 #include "Core/QMonitoringService.h"
 #include "Core/QCommandsService.h"
+#include "Core/Includes.h"
 
 #include "QSettingsApp.h"
 

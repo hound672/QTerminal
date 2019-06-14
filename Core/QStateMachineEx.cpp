@@ -5,47 +5,27 @@
 
 // ======================================================================
 
-QStateMachineEx::QStateMachineEx(QObject *parent):
-	QStateMachineEx(QString(), TStateName(), parent)
+QStateMachineEx::QStateMachineEx():
+	QStateMachineEx(QString(), TStateName())
 {
 }
 
-QStateMachineEx::QStateMachineEx(const QString &className, QObject *parent):
-	QStateMachineEx(className, TStateName(), parent)	
+QStateMachineEx::QStateMachineEx(const QString &className):
+	QStateMachineEx(className, TStateName())	
 {
 }
 
-QStateMachineEx::QStateMachineEx(const QString &className, const TStateName &stateNames, QObject *parent) : 
-	QObject(parent),
+QStateMachineEx::QStateMachineEx(const QString &className, const TStateName &stateNames) : 
 	mState(_stStartup),
 	mWorkerName(className),
 	mStateNames(stateNames)
 {
-	mTimer.setSingleShot(true);
-	connect(&mTimer, &QTimer::timeout, this, &QStateMachineEx::slotTimer);
 }
 
 // ======================================================================
 
 // ======================================================================
 //  protected                       
-// ======================================================================
-
-/**
-	* @brief  Запуск/остановка таймера
-	* @param  
-	* @retval 
-	*/
-void QStateMachineEx::setTimer(quint32 timeout)
-{
-	if (timeout == U32_MAX_VALUE) {
-		mTimer.stop();
-		return;
-	}
-	
-	mTimer.start(timeout);
-}
-
 // ======================================================================
 
 /**
@@ -87,20 +67,3 @@ QString QStateMachineEx::getStateStr() const
 }
 
 // ======================================================================
-
-// ======================================================================
-//  private slots                       
-// ======================================================================
-
-/**
-	* @brief  Слот обработки тика таймера
-	* @param  
-	* @retval 
-	*/
-void QStateMachineEx::slotTimer()
-{
-	onEvTimer();
-}
-
-// ======================================================================
-

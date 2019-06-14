@@ -91,9 +91,8 @@ void QMonitoringService::slotStopped()
 void QMonitoringService::slotMonitoring(EMonTypes monType, const QVariant &monValue)
 { 
 	if (!mClient->IsInit()) return;
-	qMonDebug() << "Got mon. Type: " << sMonNames[monType]
-					 << ". Value: " << monValue;
-	mClient->Send(sMonNames[monType], monValue);
+	QString monName = sMonNames[monType];
+	mClient->Send(monName, monValue);
 }
 
 // ======================================================================

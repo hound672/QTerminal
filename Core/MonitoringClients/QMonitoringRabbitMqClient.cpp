@@ -12,6 +12,7 @@
 QMonitoringRabbitMqClient::QMonitoringRabbitMqClient(const QSettingsApp::SRABBIT_MQ &settings, 
 																										 const QSettingsApp::SMONITORING_RABBIT_MQ &monSettings) : 
 	IMonitoringClient(),
+	mTimer(NULL),
 	mIsInit(false),
 	mMqSettings(settings),
 	mMonSettings(monSettings)
@@ -23,6 +24,7 @@ QMonitoringRabbitMqClient::QMonitoringRabbitMqClient(const QSettingsApp::SRABBIT
 QMonitoringRabbitMqClient::~QMonitoringRabbitMqClient()
 {
 	delete mExchange;	
+	delete mTimer;
 }
 
 // ======================================================================
@@ -50,7 +52,7 @@ bool QMonitoringRabbitMqClient::IsInit()
 	*/
 int QMonitoringRabbitMqClient::Init()
 {
-	qMonDebug("Start connect to RabbitMQ");
+	qDebugMon("Start connect to RabbitMQ");
 	mMqClient = new QMqClient(mMqSettings, this);
 
 	connect(mMqClient, &QMqClient::disconnected, this, &QMonitoringRabbitMqClient::SlotMqDisconnected);
@@ -66,6 +68,12 @@ int QMonitoringRabbitMqClient::Init()
 	if (!mExchange->isDeclared()) {
 		RETURN_ERROR();
 	}
+	
+	if (!mTimer) {
+		mTimer = new QTimer(this);
+		connect(mTimer,&QTimer::timeout, this, &QMonitoringRabbitMqClient::slotTimeout);
+		mTimer->start(mMonSettings.INTERVAL_SEND_DATA);
+	}
 
 	mIsInit = true;
 	RETURN_OK();
@@ -78,12 +86,9 @@ int QMonitoringRabbitMqClient::Init()
 	* @param  
 	* @retval 
 	*/
-int QMonitoringRabbitMqClient::Send(const QString &name, const QVariant &val)
+int QMonitoringRabbitMqClient::Send(const QString &name, const QVariant &value)
 {
-	// make JSON
-	QJsonObject json;
-	json.insert(name, QJsonValue::fromVariant(val));	
-	mExchange->publish(QJsonDocument(json).toJson(), mMonSettings.QUEUE);	
+	mMonStore[name] = value;
 	return 1;
 }
 
@@ -100,12 +105,35 @@ int QMonitoringRabbitMqClient::Send(const QString &name, const QVariant &val)
 	*/
 void QMonitoringRabbitMqClient::SlotMqDisconnected()
 {
-	qMonDebug("RabbitMQ is disconnected!");
+	qDebugMon("RabbitMQ is disconnected!");
 
 	QThread::sleep(20);
-	qMonDebug("Start...");
+	qDebugMon("Start...");
 	int res = Init();
-	qMonDebug("Result reconnect: %d", res);
+	qDebugMon("Result reconnect: %d", res);
+}
+
+// ======================================================================
+
+/**
+	* @brief  Отправляем данные для сервиса мониторинга
+	* @param  
+	* @retval 
+	*/
+void QMonitoringRabbitMqClient::slotTimeout()
+{
+	// make JSON
+	QJsonObject json, monJson;
+	
+	foreach (QString monName, mMonStore.keys()) {
+		monJson.insert(monName, QJsonValue::fromVariant(mMonStore[monName]));
+	}
+	
+	json.insert("service_name", mMonSettings.SERVICE_NAME);
+	json.insert("monitoring_data", monJson);
+	
+	qDebugMon() << "JSON to send: " << json;
+	mExchange->publish(QJsonDocument(json).toJson(), mMonSettings.QUEUE);
 }
 
 // ======================================================================

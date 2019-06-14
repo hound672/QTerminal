@@ -28,7 +28,7 @@ QServerApi::~QServerApi()
 // ======================================================================
 
 /**
-  * @brief  Отправляет запрос по указанному урлу
+  * @brief  Send request to server
   * @param
   * @retval
   */
@@ -40,7 +40,8 @@ QByteArray QServerApi::sendRequest(const QString &url, int &resultCode,
 	return sendRequest(link, resultCode, requestType, dataToSend);
 }
 
-QByteArray QServerApi::sendRequest(const QUrl &url, int &resultCode, QServerApi::ERequestTypes requestType, const QByteArray &dataToSend)
+QByteArray QServerApi::sendRequest(const QUrl &url, int &resultCode, 
+																	 QServerApi::ERequestTypes requestType, const QByteArray &dataToSend)
 {
 	qDebug() << "Start send request. Url: " << url;
   mRequest.setUrl(url);
@@ -62,6 +63,13 @@ QByteArray QServerApi::sendRequest(const QUrl &url, int &resultCode, QServerApi:
   reply->deleteLater();
   delete reply;
 	return readData;
+}
+
+QJsonDocument QServerApi::sendRequest(const QUrl &url, int &resultCode, 
+																	 QServerApi::ERequestTypes requestType, const QJsonObject &dataToSend)
+{
+	QByteArray res = this->sendRequest(url, resultCode, requestType, QJsonDocument(dataToSend).toJson());
+	return QJsonDocument::fromJson(res);
 }
 
 // ======================================================================

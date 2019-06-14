@@ -11,10 +11,8 @@
 
 #include "Core/Includes.h"
 
-class QStateMachineEx : public QObject
+class QStateMachineEx
 {
-	Q_OBJECT
-	
 public:
 	typedef QMap<int, QString> TStateName;
 	
@@ -25,14 +23,13 @@ public:
 // ======================================================================
 
 public:
-	explicit QStateMachineEx(QObject *parent = 0);
-	explicit QStateMachineEx(const QString &className, QObject *parent = 0);
-	explicit QStateMachineEx(const QString &className, const TStateName &stateNames, QObject *parent = 0);
+	explicit QStateMachineEx();
+	explicit QStateMachineEx(const QString &className);
+	explicit QStateMachineEx(const QString &className, const TStateName &stateNames);
 
 // ======================================================================	
 	
 protected:
-	void setTimer(quint32 timeout = U32_MAX_VALUE);
 	void setState(int newState);
 	int getState() const;
 	QString getStateStr() const;
@@ -43,14 +40,10 @@ protected:
 	
 private:
 	int mState;
-	QTimer mTimer;
 	QString mWorkerName;
 	TStateName mStateNames;
 	
 // ======================================================================
-	
-private slots:
-	void slotTimer();
 	
 };
 

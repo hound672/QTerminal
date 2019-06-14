@@ -17,7 +17,7 @@
 #include "App/AppConfig.h"
 
 // ======================================================================
-#define qMonDebug if (!IS_ENV_SET("QMONITORSERVICE_DEBUG")); else qInfo
+#define qDebugMon if (!IS_ENV_SET("QMONITORSERVICE_DEBUG")); else qInfo
 // ======================================================================
 
 // ======================================================================
@@ -31,7 +31,7 @@ public:
 	// инициализация клиента
 	virtual bool IsInit() = 0;
 	virtual int Init() = 0;
-	virtual int Send(const QString &name, const QVariant &val) = 0;
+	virtual int Send(const QString &name, const QVariant &value) = 0;
 };
 
 // ======================================================================
@@ -69,6 +69,7 @@ protected:
 	
 public slots:
 	void slotMonitoring(QMonitoringService::EMonTypes monType, const QVariant &monValue);
+	
 };
 
 

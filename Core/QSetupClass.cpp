@@ -214,32 +214,59 @@ void QSetupClass::setEnv(const QStringList vars)
 void QSetupClass::readSettings()
 {
 #ifdef SETTING_STR_VAL
-#undef SETTING_STR_VAL
+	#undef SETTING_STR_VAL
 #endif
 
 #ifdef SETTING_INT_VAL
-#undef SETTING_INT_VAL
+	#undef SETTING_INT_VAL
 #endif
 
 #ifdef SETTING_BOL_VAL
-#undef SETTING_BOL_VAL
+	#undef SETTING_BOL_VAL
 #endif
 
 #ifdef SETTINGS_BEGIN_GROUP
-#undef SETTINGS_BEGIN_GROUP
+	#undef SETTINGS_BEGIN_GROUP
 #endif
 
 #ifdef SETTINGS_END_GROUP
-#undef SETTINGS_END_GROUP
+	#undef SETTINGS_END_GROUP
+#endif
+	
+#ifdef SETTINGS_TYPED_BEGIN_GROUP
+	#undef SETTINGS_TYPED_BEGIN_GROUP
+#endif
+
+#ifdef SETTINGS_TYPED_END_GROUP
+	#undef SETTINGS_TYPED_END_GROUP
+#endif
+	
+#ifdef SETTING_TYPED_STR_VAL
+	#undef SETTING_TYPED_STR_VAL
+#endif
+
+#ifdef SETTING_TYPED_INT_VAL
+	#undef SETTING_TYPED_INT_VAL
+#endif
+
+#ifdef SETTING_TYPED_BOL_VAL
+	#undef SETTING_TYPED_BOL_VAL
 #endif
 
 #define SETTING_STR_VAL(GROUP, NAME, DEFAULT) << "\n  " << #NAME << ":" << mSettings.GROUP.NAME
 #define SETTING_INT_VAL(GROUP, NAME, DEFAULT) << "\n  " << #NAME << ":" << mSettings.GROUP.NAME
 #define SETTING_BOL_VAL(GROUP, NAME, DEFAULT) << "\n  " << #NAME << ":" << mSettings.GROUP.NAME
-
 #define SETTINGS_BEGIN_GROUP(GROUP)  << "\n-------------" << #GROUP << "-------------"
 #define SETTINGS_END_GROUP(GROUP)
+	
+// ======================================================================
 
+#define SETTINGS_TYPED_BEGIN_GROUP(TYPE, GROUP) << "\n-------------" << #GROUP << "-------------"
+#define SETTINGS_TYPED_END_GROUP(GROUP) 
+#define SETTING_TYPED_STR_VAL(GROUP, NAME, DEFAULT) << "\n  " << #NAME << ":" << mSettings.GROUP.NAME
+#define SETTING_TYPED_INT_VAL(GROUP, NAME, DEFAULT) << "\n  " << #NAME << ":" << mSettings.GROUP.NAME
+#define SETTING_TYPED_BOL_VAL(GROUP, NAME, DEFAULT) << "\n  " << #NAME << ":" << mSettings.GROUP.NAME
+	
   qDebug() << "Settings are read:"
   MAKE_SETTINGS_TABLE();
 }

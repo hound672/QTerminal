@@ -12,15 +12,17 @@
 
 // Utils
 #include "Utils/QTestStringUtils.h"
+#include "QTestBitsSet.h"
 
 int main(int argc, char *argv[])
 {
 //  std::freopen("TestsCore_UnitTests.log", "w", stdout);
 	
-	QTest::qExec(new QTestMonitoringService, argc, argv);
-	QTest::qExec(new QTestMainClass, argc, argv);
+//	QTest::qExec(new QTestMonitoringService, argc, argv);
+//	QTest::qExec(new QTestMainClass, argc, argv);
 //	QTest::qExec(new QTestComPortThread, argc, argv);
-	QTest::qExec(new QTestStringUtils, argc, argv);
+//	QTest::qExec(new QTestStringUtils, argc, argv);
+	QTest::qExec(new QTestBitsSet, argc, argv);
   
   return 0;
 }

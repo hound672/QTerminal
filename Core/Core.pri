@@ -18,7 +18,9 @@ TARGET = $${APP_NAME}
 TEMPLATE = app
 
 HEADERS += \
-    $$PWD/Utils/QStringUtils.h
+    $$PWD/Utils/QStringUtils.h \
+    $$PWD/Utils/QBitsSet.h
 
 SOURCES += \
-    $$PWD/Utils/QStringUtils.cpp
+    $$PWD/Utils/QStringUtils.cpp \
+    $$PWD/Utils/QBitsSet.cpp
