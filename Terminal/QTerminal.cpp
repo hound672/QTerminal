@@ -224,10 +224,10 @@ void QTerminal::setStateConnecting()
 	// меняем настройки порта
 	QComPortThread::SSettings settings;
 	settings.mPortName = APP_SETTINGS()->PORT.NAME;
-	settings.mBoudRate =  (QSerialPort::BaudRate)APP_SETTINGS()->PORT.BAUDRATE;
-	settings.mDataBits = (QSerialPort::DataBits)APP_SETTINGS()->PORT.DATABITS;
-	settings.mParity = (QSerialPort::Parity)APP_SETTINGS()->PORT.PARITY;
-	settings.mStopBits = (QSerialPort::StopBits)APP_SETTINGS()->PORT.STOPBITS;
+	settings.mBoudRate =  static_cast<QSerialPort::BaudRate>(APP_SETTINGS()->PORT.BAUDRATE);
+	settings.mDataBits = static_cast<QSerialPort::DataBits>(APP_SETTINGS()->PORT.DATABITS);
+	settings.mParity = static_cast<QSerialPort::Parity>(APP_SETTINGS()->PORT.PARITY);
+	settings.mStopBits = static_cast<QSerialPort::StopBits>(APP_SETTINGS()->PORT.STOPBITS);
 	
 	mPort->setSettings(settings);
 	mTimer.start(0);
